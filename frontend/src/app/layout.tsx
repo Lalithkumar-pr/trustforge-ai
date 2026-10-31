@@ -12,11 +12,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className="bg-navy-900 text-gray-100 min-h-screen antialiased selection:bg-blue-600 selection:text-white">
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="bg-app-bg text-text-primary min-h-screen antialiased selection:bg-primary-light selection:text-primary-accent font-sans">
         {children}
       </body>
     </html>
   );
 }
-

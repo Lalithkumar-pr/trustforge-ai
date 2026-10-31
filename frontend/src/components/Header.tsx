@@ -1,104 +1,99 @@
 'use client';
 import React from 'react';
-import { ShieldAlert, Cpu, Sparkles, Activity, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 interface HeaderProps {
   health: {
     status: string;
     version: string;
-    gemini_configured: boolean;
-    gemini_model: string;
+    [key: string]: any;
   } | null;
   activeTab: string;
   setActiveTab: (tab: string) => void;
 }
 
 export default function Header({ health, activeTab, setActiveTab }: HeaderProps) {
-  const tabs = [
-    { id: 'dashboard', label: 'Dashboard' },
-    { id: 'new_eval', label: 'New Evaluation' },
-    { id: 'live_eval', label: 'Live Evaluation' },
-    { id: 'reports', label: 'Reports & Evidence' },
-    { id: 'regression', label: 'Regression Suite' },
-    { id: 'human_review', label: 'Human Review' },
-    { id: 'adaptive_jury', label: 'Adaptive Jury (Demo)' },
-    { id: 'sandbox_chat', label: 'Helpdesk Sandbox' },
-    { id: 'benchmark', label: 'Benchmark Metrics' },
+  const navItems = [
+    { id: 'overview', label: 'Overview' },
+    { id: 'target_lab', label: 'Target Lab', badge: 'Product A' },
+    { id: 'evaluator', label: 'Evaluator', badge: 'Product B' },
+    { id: 'history', label: 'Evaluation History' },
   ];
 
   return (
-    <header className="border-b border-navy-700 bg-navy-900/95 backdrop-blur-md sticky top-0 z-50">
+    <header className="border-b border-border bg-surface/95 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo and Tagline */}
-          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setActiveTab('dashboard')}>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-violet-600 flex items-center justify-center glow-blue shadow-lg shadow-blue-500/20">
-              <ShieldAlert className="w-6 h-6 text-white" />
+          {/* Brand Logo & Product Tagline */}
+          <div
+            className="flex items-center space-x-3 cursor-pointer group"
+            onClick={() => setActiveTab('overview')}
+          >
+            <div className="w-9 h-9 rounded-lg bg-primary-light border border-[#C5D9F8] flex items-center justify-center text-primary group-hover:border-primary/40 transition-colors">
+              <ShieldCheck className="w-5 h-5 text-primary" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-extrabold text-xl tracking-tight text-white bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-200 to-purple-400">
+                <span className="font-bold text-lg tracking-tight text-text-primary">
                   TRUSTFORGE AI
                 </span>
-                <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                  Agentic QE
+                <span className="hidden sm:inline-block px-2 py-0.5 text-[11px] font-medium rounded bg-surface-secondary text-text-secondary border border-border">
+                  Enterprise QE
                 </span>
               </div>
-              <p className="text-[11px] text-gray-400 font-medium">Agentic Quality Engineering for LLM-Enabled Systems</p>
+              <p className="text-[11px] text-text-muted hidden sm:block">
+                Agentic Quality Engineering for LLM-Enabled Systems
+              </p>
             </div>
           </div>
 
-          {/* System Status Indicators */}
-          <div className="flex items-center space-x-3 text-xs">
+          {/* Primary Navigation */}
+          <nav className="flex items-center space-x-1 sm:space-x-2">
+            {navItems.map((item) => {
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm transition-all ${
+                    isActive
+                      ? 'bg-primary-light text-primary border border-primary/25 font-semibold shadow-sm'
+                      : 'text-text-secondary hover:text-text-primary hover:bg-surface-secondary border border-transparent font-medium'
+                  }`}
+                >
+                  <span>{item.label}</span>
+                  {item.badge && (
+                    <span
+                      className={`hidden md:inline-block text-[10px] uppercase font-semibold px-1.5 py-0.2 rounded ${
+                        isActive
+                          ? 'bg-primary/10 text-primary-accent'
+                          : 'bg-surface-secondary text-text-muted'
+                      }`}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* System Status */}
+          <div className="hidden lg:flex items-center space-x-3 text-xs">
             {health ? (
-              <>
-                <div className="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-navy-800 border border-navy-700 text-gray-300">
-                  <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Backend v{health.version}</span>
-                </div>
-                <div className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-md border ${
-                  health.gemini_configured
-                    ? 'bg-purple-950/40 border-purple-500/30 text-purple-300'
-                    : 'bg-amber-950/40 border-amber-500/30 text-amber-300'
-                }`}>
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>
-                    {health.gemini_configured
-                      ? `Gemini Active (${health.gemini_model})`
-                      : 'Gemini Offline (Deterministic Fallback Engine)'}
-                  </span>
-                </div>
-              </>
+              <div className="flex items-center space-x-2 px-2.5 py-1 rounded-md bg-surface border border-border text-text-secondary shadow-sm">
+                <span className="w-2 h-2 rounded-full bg-status-success-text" />
+                <span className="text-text-secondary text-xs font-medium">System Online</span>
+              </div>
             ) : (
-              <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-red-950/40 border border-red-500/30 text-red-300">
-                <div className="w-2 h-2 rounded-full bg-red-500" />
-                <span>Connecting to Backend...</span>
+              <div className="flex items-center space-x-2 px-2.5 py-1 rounded-md bg-status-warning-bg border border-[#F0D5A3] text-status-warning-text">
+                <span className="w-2 h-2 rounded-full bg-status-warning-text animate-pulse" />
+                <span>Connecting...</span>
               </div>
             )}
           </div>
-        </div>
-
-        {/* Navigation Tabs */}
-        <div className="flex space-x-1 overflow-x-auto py-2 scrollbar-none border-t border-navy-800/80">
-          {tabs.map((tab) => {
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all duration-150 ${
-                  isActive
-                    ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-300 border border-blue-500/30 shadow-sm'
-                    : 'text-gray-400 hover:text-gray-200 hover:bg-navy-800/50'
-                }`}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
         </div>
       </div>
     </header>
   );
 }
-

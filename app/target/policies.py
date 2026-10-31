@@ -137,6 +137,12 @@ def get_policy(doc_id: str) -> Optional[PolicyDocument]:
 def update_policy(doc: PolicyDocument) -> None:
     _ACTIVE_POLICY_STORE[doc.doc_id] = doc
 
+def delete_policy(doc_id: str) -> bool:
+    if doc_id in _ACTIVE_POLICY_STORE:
+        del _ACTIVE_POLICY_STORE[doc_id]
+        return True
+    return False
+
 def reset_policies() -> None:
     global _ACTIVE_POLICY_STORE
     _ACTIVE_POLICY_STORE = dict(SYNTHETIC_POLICIES)

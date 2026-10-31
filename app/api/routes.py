@@ -19,7 +19,7 @@ from app.schemas.risk import RiskItem
 from app.schemas.test_case import TestCaseItem
 from app.schemas.verification import VerificationFindingItem, EvidenceItem
 from app.target.helpdesk import target_helpdesk_service
-from app.target.policies import get_all_policies, reset_policies
+from app.target.policies import get_all_policies, reset_policies, update_policy, delete_policy, PolicyDocument
 from app.agents.orchestrator import orchestrator
 from app.config import settings
 from app.core.gemini_client import target_llm, evaluator_llm
@@ -42,6 +42,20 @@ def health_check():
 def list_policies():
     """Lists current active enterprise synthetic policy documents."""
     return get_all_policies()
+
+@router.post("/policies")
+def save_policy(doc: PolicyDocument):
+    """Adds or updates an enterprise policy document in the knowledge base."""
+    update_policy(doc)
+    return {"message": f"Policy {doc.doc_id} successfully saved to knowledge base.", "policy": doc}
+
+@router.delete("/policies/{doc_id}")
+def remove_policy(doc_id: str):
+    """Deletes an enterprise policy document from the knowledge base."""
+    success = delete_policy(doc_id)
+    if not success:
+        raise HTTPException(status_code=404, detail=f"Policy {doc_id} not found in knowledge base.")
+    return {"message": f"Policy {doc_id} successfully removed from knowledge base."}
 
 @router.post("/policies/reset")
 def reset_policy_catalog():

@@ -1,21 +1,25 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
-import DashboardView from '@/components/DashboardView';
-import NewEvaluationView from '@/components/NewEvaluationView';
-import LiveEvaluationView from '@/components/LiveEvaluationView';
-import ReportsView from '@/components/ReportsView';
-import RegressionView from '@/components/RegressionView';
-import HumanReviewView from '@/components/HumanReviewView';
-import AdaptiveJuryView from '@/components/AdaptiveJuryView';
-import HelpdeskChatView from '@/components/HelpdeskChatView';
-import BenchmarkView from '@/components/BenchmarkView';
+import OverviewView from '@/components/OverviewView';
+import TargetLabView, { TargetConfig } from '@/components/TargetLabView';
+import EvaluatorView from '@/components/EvaluatorView';
+import HistoryView from '@/components/HistoryView';
 import { fetchHealth } from '@/lib/api';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState('dashboard');
-  const [currentEvaluationId, setCurrentEvaluationId] = useState('');
+  const [activeTab, setActiveTab] = useState<'overview' | 'target_lab' | 'evaluator' | 'history'>('overview');
   const [health, setHealth] = useState<any | null>(null);
+  const [currentEvaluationId, setCurrentEvaluationId] = useState<string>('');
+
+  // Target Application Configurable Vulnerabilities (Shared between Target Lab & Evaluator)
+  const [targetConfig, setTargetConfig] = useState<TargetConfig>({
+    mfa_bypass: true,
+    unsupported_claims: false,
+    citation_mismatch: false,
+    prompt_injection_weakness: true,
+    outdated_policy: false,
+  });
 
   useEffect(() => {
     fetchHealth()
@@ -23,86 +27,66 @@ export default function Home() {
       .catch((e) => console.warn('Backend offline or starting up:', e));
   }, []);
 
-  const handleStartNew = () => {
-    setActiveTab('new_eval');
+  const handleOpenEvaluationReport = (evalId: string) => {
+    setCurrentEvaluationId(evalId);
+    setActiveTab('evaluator');
   };
 
-  const handleEvaluationStarted = (id: string) => {
-    setCurrentEvaluationId(id);
-    setActiveTab('live_eval');
-  };
-
-  const handleViewEvaluation = (id: string) => {
-    setCurrentEvaluationId(id);
-    setActiveTab('reports');
-  };
-
-  const handleGoToHumanReview = (id: string) => {
-    setCurrentEvaluationId(id);
-    setActiveTab('human_review');
+  const handleStartEvaluatorWithCurrentConfig = () => {
+    setCurrentEvaluationId('');
+    setActiveTab('evaluator');
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-navy-900 text-gray-100">
-      <Header health={health} activeTab={activeTab} setActiveTab={setActiveTab} />
+    <div className="min-h-screen flex flex-col bg-app-bg text-text-primary">
+      <Header
+        health={health}
+        activeTab={activeTab}
+        setActiveTab={(t: any) => setActiveTab(t)}
+      />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'dashboard' && (
-          <DashboardView
-            onStartNew={handleStartNew}
-            onViewEvaluation={handleViewEvaluation}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {activeTab === 'overview' && (
+          <OverviewView
+            onNavigate={(t: any) => setActiveTab(t)}
+            targetConfig={targetConfig}
           />
         )}
 
-        {activeTab === 'new_eval' && (
-          <NewEvaluationView
-            onEvaluationStarted={handleEvaluationStarted}
+        {activeTab === 'target_lab' && (
+          <TargetLabView
+            config={targetConfig}
+            onChangeConfig={setTargetConfig}
+            onNavigateToEvaluator={handleStartEvaluatorWithCurrentConfig}
           />
         )}
 
-        {activeTab === 'live_eval' && (
-          <LiveEvaluationView
-            evaluationId={currentEvaluationId}
-            onViewReport={handleViewEvaluation}
+        {activeTab === 'evaluator' && (
+          <EvaluatorView
+            key={currentEvaluationId || 'new'}
+            targetConfig={targetConfig}
+            initialEvaluationId={currentEvaluationId}
+            onNavigateToTargetLab={() => setActiveTab('target_lab')}
           />
         )}
 
-        {activeTab === 'reports' && (
-          <ReportsView
-            evaluationId={currentEvaluationId}
-            onGoToHumanReview={handleGoToHumanReview}
+        {activeTab === 'history' && (
+          <HistoryView
+            onSelectEvaluation={handleOpenEvaluationReport}
+            onNavigateToEvaluator={() => {
+              setCurrentEvaluationId('');
+              setActiveTab('evaluator');
+            }}
           />
-        )}
-
-        {activeTab === 'regression' && (
-          <RegressionView />
-        )}
-
-        {activeTab === 'human_review' && (
-          <HumanReviewView
-            evaluationId={currentEvaluationId}
-          />
-        )}
-
-        {activeTab === 'adaptive_jury' && (
-          <AdaptiveJuryView
-            evaluationId={currentEvaluationId}
-          />
-        )}
-
-        {activeTab === 'sandbox_chat' && (
-          <HelpdeskChatView />
-        )}
-
-        {activeTab === 'benchmark' && (
-          <BenchmarkView />
         )}
       </main>
 
-      <footer className="border-t border-navy-800 bg-navy-900/80 py-4 text-center text-xs text-gray-500">
-        <p>TrustForge AI &bull; Agentic Quality Engineering for LLM-Enabled Systems &bull; Hackathon Edition</p>
+      {/* Understated Enterprise Footer */}
+      <footer className="border-t border-border py-4 text-center text-xs text-text-muted bg-surface">
+        <p>
+          TrustForge AI &bull; Agentic Quality Engineering for LLM-Enabled Systems
+        </p>
       </footer>
     </div>
   );
 }
-

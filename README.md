@@ -53,7 +53,47 @@ TrustForge AI enforces strict logical and security decoupling between the system
 
 ---
 
-## 2. Five Specialized Agents
+## 2. Product Experience & Information Architecture
+
+TrustForge AI is organized into **EXACTLY TWO CORE PRODUCTS** across a simplified 4-item navigation structure:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                        PRIMARY NAVIGATION                              │
+│   [ 1. Overview ]   [ 2. Target Lab ]   [ 3. Evaluator ]   [ 4. History ]
+└───────────┬─────────────────────┬───────────────────┬──────────────────┘
+            │                     │                   │
+            │                     │                   ▼
+            │                     │       [ EVALUATION HISTORY ]
+            │                     │       - Historical Audit Log
+            │                     │       - Score & Failure Tracking
+            │                     │       - View Report Drilldown
+            │                     │       - Persistent Regressions
+            ▼                     ▼
+┌────────────────────────┐  ┌────────────────────────────────────────────┐
+│  PRODUCT A: TARGET LAB │  │       PRODUCT B: TRUSTFORGE EVALUATOR      │
+│                        │  │                                            │
+│ A. App Configuration   │  │ Step 1: Select Target Application          │
+│ B. Knowledge Base      │  │ Step 2: Configure Quality Evaluation       │
+│ C. Vulnerability Sw.   │  │ Step 3: Run Evaluation Backend             │
+│ D. Chat Playground     │  │ Step 4: Live Execution (6 Friendly Stages) │
+│                        │  │ Step 5: Findings & Side-by-Side Evidence   │
+│                        │  │ Step 6: Evaluation Report (7 Dimensions)   │
+│                        │  │ Step 7: Policy Adaptation ("Update & Re-eval")
+│                        │  │ Step 8: Human Review & Release Authority   │
+└────────────────────────┘  └────────────────────────────────────────────┘
+```
+
+### Primary Navigation
+
+1. **Overview**: Executive platform landing, system status, product definition, and key architectural principles.
+2. **Target Lab (Product A)**: Configurable LLM application under test, knowledge base management, 6 vulnerability switches, and conversational chat playground.
+3. **Evaluator (Product B)**: 8-step unified evaluation workflow (select app, configure depth/adversarial/regression, live execution across 6 stages, findings with ground-truth evidence, 7-dimension scoring, runtime policy adaptation, and human review).
+4. **Evaluation History**: Comprehensive audit catalog of previous evaluations, scores, release decisions, and persistent regression tests.
+
+---
+
+## 3. Five Specialized Agents
 
 1. **Agent 1: Orchestrator (`app/agents/orchestrator.py`)**
    - Coordinates the 6-stage Quality Engineering lifecycle:

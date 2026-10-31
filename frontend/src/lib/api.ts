@@ -18,6 +18,36 @@ export async function fetchPolicies() {
   return handleResponse<any[]>(res);
 }
 
+export async function savePolicy(policy: {
+  doc_id: string;
+  title: string;
+  version: string;
+  last_updated: string;
+  content: string;
+  important_requirements: string;
+}) {
+  const res = await fetch(`${API_BASE}/policies`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(policy),
+  });
+  return handleResponse<any>(res);
+}
+
+export async function deletePolicy(docId: string) {
+  const res = await fetch(`${API_BASE}/policies/${docId}`, {
+    method: 'DELETE',
+  });
+  return handleResponse<any>(res);
+}
+
+export async function resetPolicies() {
+  const res = await fetch(`${API_BASE}/policies/reset`, {
+    method: 'POST',
+  });
+  return handleResponse<any>(res);
+}
+
 export async function createEvaluation(payload: {
   name: string;
   target_config: any;

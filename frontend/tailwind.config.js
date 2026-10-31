@@ -5,29 +5,61 @@ module.exports = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+      },
       colors: {
-        navy: {
-          900: '#070b14',
-          850: '#0c1222',
-          800: '#11192e',
-          700: '#1a243e',
-          600: '#263457',
+        app: {
+          bg: '#F7F8FA',
         },
-        forge: {
-          blue: '#3b82f6',
-          cyan: '#06b6d4',
-          violet: '#8b5cf6',
-          purple: '#a855f7',
-          emerald: '#10b981',
-          rose: '#f43f5e',
-          amber: '#f59e0b',
-        }
+        surface: {
+          DEFAULT: '#FFFFFF',
+          secondary: '#F1F3F6',
+          subtle: '#F8FAFC',
+        },
+        border: {
+          DEFAULT: '#E2E6EC',
+          strong: '#D5DBE4',
+          divider: '#E9EDF2',
+        },
+        text: {
+          primary: '#172033',
+          secondary: '#526075',
+          muted: '#8490A3',
+          disabled: '#AAB2BF',
+        },
+        primary: {
+          DEFAULT: '#3568B8',
+          hover: '#28569D',
+          light: '#EAF1FC',
+          accent: '#285A9E',
+        },
+        secondary: {
+          DEFAULT: '#7865B5',
+          light: '#F1EEFA',
+        },
+        status: {
+          success: {
+            text: '#16845B',
+            bg: '#E8F5EE',
+          },
+          warning: {
+            text: '#A96D12',
+            bg: '#FFF4DE',
+          },
+          error: {
+            text: '#C44444',
+            bg: '#FCECEC',
+          },
+          info: {
+            text: '#3568B8',
+            bg: '#EAF1FC',
+          },
+        },
       },
     },
   },
   plugins: [],
 }
-
